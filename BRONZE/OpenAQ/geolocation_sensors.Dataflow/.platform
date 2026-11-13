@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "geolocation_sensors"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9534b3f4-2df4-ae8f-462c-a6995c07e25c"
+  }
+}

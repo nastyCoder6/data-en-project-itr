@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "NYC_TAXI_Historic"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2ae0a5d5-1895-886c-4705-1da03ac6e89b"
+  }
+}

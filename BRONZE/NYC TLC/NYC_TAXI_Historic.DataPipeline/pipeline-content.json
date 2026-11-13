@@ -1,0 +1,206 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "currentDate",
+          "value": {
+            "value": "@formatDateTime('2009-01-01', 'yyyy-MM')",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "init_set_currentDate",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@variables('dates')",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "BinarySource",
+                  "formatSettings": {
+                    "type": "BinaryReadSettings"
+                  },
+                  "storeSettings": {
+                    "type": "HttpReadSettings",
+                    "requestMethod": "GET"
+                  },
+                  "datasetSettings": {
+                    "type": "Binary",
+                    "typeProperties": {
+                      "location": {
+                        "type": "HttpServerLocation",
+                        "relativeUrl": {
+                          "value": "@concat('yellow_tripdata_', item(), '.parquet')",
+                          "type": "Expression"
+                        }
+                      }
+                    },
+                    "externalReferences": {
+                      "connection": "c0984dfd-6624-4b6b-a2c3-75767228617f"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "BinarySink",
+                  "storeSettings": {
+                    "type": "LakehouseWriteSettings"
+                  },
+                  "datasetSettings": {
+                    "type": "Binary",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "folderPath": "NYC_TLC/yellow_cabs",
+                        "fileName": {
+                          "value": "@concat('yellow_tripdata_', item(), '.parquet')",
+                          "type": "Expression"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "name": "B_Lakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "ee4dc732-748f-b7ff-4063-9e4f65d2627a",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "yellow_cabs_load",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Until1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Until",
+        "typeProperties": {
+          "expression": {
+            "value": "@greater(variables('currentDate'), subtractFromTime(utcNow(), 3, 'Month'))",
+            "type": "Expression"
+          },
+          "timeout": "0.12:00:00",
+          "activities": [
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "tempDate",
+                "value": {
+                  "value": "@addToTime(variables('currentDate'), 1, 'Month', 'yyyy-MM')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "set_tempDate",
+              "dependsOn": [
+                {
+                  "activity": "append_to_dates",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "AppendVariable",
+              "typeProperties": {
+                "variableName": "dates",
+                "value": {
+                  "value": "@variables('currentDate')",
+                  "type": "Expression"
+                }
+              },
+              "name": "append_to_dates",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "currentDate",
+                "value": {
+                  "value": "@variables('tempDate')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "set_currentDate",
+              "dependsOn": [
+                {
+                  "activity": "set_tempDate",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "Until1",
+        "dependsOn": [
+          {
+            "activity": "init_set_currentDate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "dates": {
+        "type": "Array"
+      },
+      "currentDate": {
+        "type": "String"
+      },
+      "tempDate": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Lookup1').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@and(greaterOrEquals(pipeline().parameters.targetYear, item().startDate), lessOrEquals(pipeline().parameters.targetYear,item().recentDate))",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "RefreshDataflow",
+                    "typeProperties": {
+                      "dataflowId": "13783a45-3ff3-b16c-42c2-6d1a550f4181",
+                      "workspaceId": "00000000-0000-0000-0000-000000000000",
+                      "notifyOption": "NoNotification",
+                      "dataflowType": "DataflowFabric",
+                      "parameters": {
+                        "api_key": {
+                          "value": "43f27a6543ffeeb2c6141bd3bff36db2935ab39016d02d8af4c9c11a4e3778c0",
+                          "type": "String"
+                        },
+                        "target_year": {
+                          "value": {
+                            "value": "@pipeline().parameters.targetYear",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "sensor_id": {
+                          "value": {
+                            "value": "@item().ID",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      },
+                      "executeMashupQueriesOnly": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Dataflow1",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": []
+              },
+              "name": "If Condition1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Lookup1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "schema": "dbo",
+              "table": "sensors"
+            },
+            "schema": [],
+            "connectionSettings": {
+              "name": "B_Lakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "ee4dc732-748f-b7ff-4063-9e4f65d2627a",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "externalReferences": {
+                  "connection": "0398f6f5-edf8-4e59-9542-d8f409440e08"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup1",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "targetYear": {
+        "type": "int"
+      }
+    },
+    "variables": {
+      "currentYear": {
+        "type": "String",
+        "defaultValue": "2016"
+      }
+    }
+  }
+}

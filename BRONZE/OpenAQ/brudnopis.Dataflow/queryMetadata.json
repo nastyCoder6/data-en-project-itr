@@ -1,0 +1,38 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "brudnopis",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "api_key": {
+      "queryId": "b54b916f-b9c2-466f-bbc4-d8662aa87275",
+      "queryName": "api_key",
+      "loadEnabled": false
+    },
+    "target_year": {
+      "queryId": "775ad4eb-33c7-410c-a06e-1e7224a95d75",
+      "queryName": "target_year",
+      "loadEnabled": false
+    },
+    "sensor_id": {
+      "queryId": "85c33e2d-9350-4bd6-a6ba-3b5b21e94c3d",
+      "queryName": "sensor_id",
+      "loadEnabled": false
+    },
+    "fetchHourlyData": {
+      "queryId": "d786b8ac-a09d-4947-8a69-e8ed9686cfa8",
+      "queryName": "fetchHourlyData",
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "https://api.openaq.org/v3",
+      "kind": "Web",
+      "connectionId": "{\"ClusterId\":\"a5e7fb89-dfba-4219-a06a-1c7465b7c824\",\"DatasourceId\":\"e1a761ee-414c-407f-bbde-bae32ca6d282\"}"
+    }
+  ]
+}

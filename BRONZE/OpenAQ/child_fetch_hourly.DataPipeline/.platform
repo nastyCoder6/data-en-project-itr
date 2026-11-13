@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "child_fetch_hourly"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9936ecd8-3793-87ce-4745-0988c81e1e91"
+  }
+}

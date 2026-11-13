@@ -1,0 +1,121 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Until",
+        "typeProperties": {
+          "expression": {
+            "value": "@greater(variables('currYear'), 2025)",
+            "type": "Expression"
+          },
+          "timeout": "0.12:00:00",
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "targetYear": {
+                    "value": "@variables('currYear')",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "9936ecd8-3793-87ce-4745-0988c81e1e91",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "4659dad7-2aa0-43c8-99da-885d92a2bf8e"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "fetch_year_hourly_data",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "tempYear",
+                "value": {
+                  "value": "@variables('currYear')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable1",
+              "dependsOn": [
+                {
+                  "activity": "fetch_year_hourly_data",
+                  "dependencyConditions": [
+                    "Completed"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "currYear",
+                "value": {
+                  "value": "@add(1, variables('tempYear'))",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable2",
+              "dependsOn": [
+                {
+                  "activity": "Set variable1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "Until1",
+        "dependsOn": [
+          {
+            "activity": "initial_year",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "currYear",
+          "value": 2017
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "initial_year",
+        "dependsOn": []
+      }
+    ],
+    "variables": {
+      "currYear": {
+        "type": "Integer"
+      },
+      "tempYear": {
+        "type": "Integer"
+      }
+    }
+  }
+}
