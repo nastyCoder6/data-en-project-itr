@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Dataflow",
-    "displayName": "brudnopis"
+    "type": "Notebook",
+    "displayName": "OpenAQ_to_silver"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "e7ad4d33-3c4a-a70a-4817-30861123c8a6"
+    "logicalId": "b7957795-9321-959b-43e6-71a361534192"
   }
 }

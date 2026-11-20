@@ -12,19 +12,30 @@
       "queryName": "api_key",
       "loadEnabled": false
     },
-    "target_year": {
-      "queryId": "775ad4eb-33c7-410c-a06e-1e7224a95d75",
-      "queryName": "target_year",
+    "date_from": {
+      "queryId": "91350439-af26-4ba7-9680-a6e94f2017e7",
+      "queryName": "date_from",
       "loadEnabled": false
     },
-    "sensor_id": {
-      "queryId": "85c33e2d-9350-4bd6-a6ba-3b5b21e94c3d",
-      "queryName": "sensor_id",
+    "date_to": {
+      "queryId": "929b6dd2-7592-41b8-becc-1977a5769d4f",
+      "queryName": "date_to",
       "loadEnabled": false
     },
     "fetchHourlyData": {
       "queryId": "d786b8ac-a09d-4947-8a69-e8ed9686cfa8",
       "queryName": "fetchHourlyData",
+      "loadEnabled": false
+    },
+    "fetchHourlyData_DataDestination": {
+      "queryId": "4972d627-f1e1-4ecf-b660-2f5e211fb8e2",
+      "queryName": "fetchHourlyData_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "sensor_id": {
+      "queryId": "85c33e2d-9350-4bd6-a6ba-3b5b21e94c3d",
+      "queryName": "sensor_id",
       "loadEnabled": false
     }
   },
@@ -33,6 +44,11 @@
       "path": "https://api.openaq.org/v3",
       "kind": "Web",
       "connectionId": "{\"ClusterId\":\"a5e7fb89-dfba-4219-a06a-1c7465b7c824\",\"DatasourceId\":\"e1a761ee-414c-407f-bbde-bae32ca6d282\"}"
+    },
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"a5e7fb89-dfba-4219-a06a-1c7465b7c824\",\"DatasourceId\":\"0398f6f5-edf8-4e59-9542-d8f409440e08\"}"
     }
   ]
 }

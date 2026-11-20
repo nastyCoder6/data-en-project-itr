@@ -1,8 +1,18 @@
 [StagingDefinition = [Kind = "FastCopy"]]
 section Section1;
 shared api_key = "43f27a6543ffeeb2c6141bd3bff36db2935ab39016d02d8af4c9c11a4e3778c0" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
-shared target_year = "2017" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
-shared sensor_id = "674" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
+shared sensor_id = "671" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
+shared fetchHourlyData_DataDestination = let
+  Pattern = Lakehouse.Contents([HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true, CreateNavigationProperties = false, EnableFolding = false]),
+  Navigation_1 = Pattern{[workspaceId = "eaae3c98-2b09-40ae-a50e-1ebe083859a5"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "65d2627a-9e4f-4063-b7ff-748fee4dc732"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "dbo", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "OpenAQ_SENSORS_MES_HOUR_raw", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared start_date = "2026-01-01" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
+shared end_date = "2026-01-02" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = type text];
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "fetchHourlyData_DataDestination", IsNewTarget = true], Settings = [Kind = "Manual", AllowCreation = true, ColumnSettings = [Mappings = {[SourceColumnName = "sensorId", DestinationColumnName = "sensorId"], [SourceColumnName = "value", DestinationColumnName = "value"], [SourceColumnName = "hasFlags", DestinationColumnName = "hasFlags"], [SourceColumnName = "id", DestinationColumnName = "id"], [SourceColumnName = "name", DestinationColumnName = "name"], [SourceColumnName = "units", DestinationColumnName = "units"], [SourceColumnName = "timeFrom", DestinationColumnName = "timeFrom"], [SourceColumnName = "timeTo", DestinationColumnName = "timeTo"]}], DynamicSchema = false, UpdateMethod = [Kind = "Append"], TypeSettings = [Kind = "Table"]]]}]
 shared fetchHourlyData = let
   BaseUrl = "https://api.openaq.org/v3/",
   GetPage = (pageNumber as number) =>
@@ -12,7 +22,7 @@ shared fetchHourlyData = let
     [
       RelativePath= "sensors/" & sensor_id &"/hours", 
       Headers = [#"X-API-Key" = api_key], 
-      Query= [page= Text.From(pageNumber), limit="1000", datetime_from= target_year & "-01-01", datetime_to= target_year & "-12-31"],
+      Query= [page= Text.From(pageNumber), limit="1000", datetime_from= start_date, datetime_to= end_date],
       Timeout= #duration(0,0,3,0)
     ]),
   Json = Json.Document(Source)

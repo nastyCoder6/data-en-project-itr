@@ -1,0 +1,182 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Sensors').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@and(greaterOrEquals(formatDateTime(variables('startDate'), 'yyyy'), item().startDate), lessOrEquals(formatDateTime(variables('endDate'), 'yyyy'),item().recentDate))",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "RefreshDataflow",
+                    "typeProperties": {
+                      "dataflowId": "bdb9c481-71c0-9f02-42ca-4fb2ebbff512",
+                      "workspaceId": "00000000-0000-0000-0000-000000000000",
+                      "notifyOption": "NoNotification",
+                      "dataflowType": "DataflowFabric",
+                      "parameters": {
+                        "api_key": {
+                          "value": "43f27a6543ffeeb2c6141bd3bff36db2935ab39016d02d8af4c9c11a4e3778c0",
+                          "type": "String"
+                        },
+                        "sensor_id": {
+                          "value": {
+                            "value": "@item().ID",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "start_date": {
+                          "value": {
+                            "value": "@variables('startDate')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        },
+                        "end_date": {
+                          "value": {
+                            "value": "@variables('endDate')",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      },
+                      "executeMashupQueriesOnly": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Dataflow1",
+                    "dependsOn": []
+                  }
+                ],
+                "ifFalseActivities": []
+              },
+              "name": "If Condition1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Sensors",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "startDate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "endDate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "schema": "dbo",
+              "table": "sensors"
+            },
+            "schema": [],
+            "connectionSettings": {
+              "name": "B_Lakehouse",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "ee4dc732-748f-b7ff-4063-9e4f65d2627a",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "externalReferences": {
+                  "connection": "0398f6f5-edf8-4e59-9542-d8f409440e08"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Sensors",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "startDate",
+          "value": {
+            "value": "@string(startOfMonth(subtractFromTime(utcNow(), 1, 'Month'), 'yyyy-MM-dd'))",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "startDate",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "endDate",
+          "value": {
+            "value": "@startOfMonth(utcNow(),'yyyy-MM-dd')",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "endDate",
+        "description": "",
+        "dependsOn": []
+      }
+    ],
+    "variables": {
+      "startDate": {
+        "type": "String"
+      },
+      "endDate": {
+        "type": "String"
+      }
+    }
+  }
+}

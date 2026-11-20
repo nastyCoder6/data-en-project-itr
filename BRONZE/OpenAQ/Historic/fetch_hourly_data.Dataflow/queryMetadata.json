@@ -12,16 +12,6 @@
       "queryName": "api_key",
       "loadEnabled": false
     },
-    "target_year": {
-      "queryId": "152f0c32-325c-4fdf-9d7c-bf1923bdb782",
-      "queryName": "target_year",
-      "loadEnabled": false
-    },
-    "sensor_id": {
-      "queryId": "b7e3b6d5-92a9-444e-83f3-bc38e0b7c190",
-      "queryName": "sensor_id",
-      "loadEnabled": false
-    },
     "fetchHourlyData": {
       "queryId": "3fd77c11-4d92-443e-8350-113ce6e532a0",
       "queryName": "fetchHourlyData",
@@ -31,6 +21,16 @@
       "queryId": "92d37751-48d9-4835-a91b-c2f4441a4e8e",
       "queryName": "fetchHourlyData_DataDestination",
       "isHidden": true,
+      "loadEnabled": false
+    },
+    "sensor_id": {
+      "queryId": "b7e3b6d5-92a9-444e-83f3-bc38e0b7c190",
+      "queryName": "sensor_id",
+      "loadEnabled": false
+    },
+    "target_year": {
+      "queryId": "152f0c32-325c-4fdf-9d7c-bf1923bdb782",
+      "queryName": "target_year",
       "loadEnabled": false
     }
   },
